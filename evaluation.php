@@ -12,8 +12,12 @@ class Evaluation {
         try {
             // Now, insert a record in the evaluations table
             $evaluationSql = "
-                INSERT INTO evaluations(employee_id, evaluator_name, evaluation_type, commitment, problem_identification, task_performance, interpersonal_relationship, professional_posture, initiative, system_overview, punctuality, attendance, overall_performance, evaluation_date)
-                VALUES(:employee_id, :evaluator_name, :evaluation_type, :commitment, :problem_identification, :task_performance, :interpersonal_relationship, :professional_posture, :initiative, :system_overview, :punctuality, :attendance, :overall_performance, NOW())
+                INSERT INTO evaluations(employee_id, evaluator_name, evaluation_type, commitment, problem_identification, task_performance, 
+                interpersonal_relationship, professional_posture, initiative, system_overview, punctuality, attendance, overall_performance,
+                 evaluation_date)
+                VALUES(:employee_id, :evaluator_name, :evaluation_type, :commitment, :problem_identification, :task_performance, 
+                :interpersonal_relationship, :professional_posture, :initiative, :system_overview, :punctuality, :attendance, 
+                :overall_performance, NOW())
             ";
 
             $evaluationStmt = $this->db->getConnection()->prepare($evaluationSql);
@@ -72,10 +76,6 @@ class Evaluation {
         try {
             $sql = "UPDATE performance_evaluation 
                     SET employee_id = :employee_id,
-                        employee_name = (SELECT CONCAT(e.first_name, ' ', e.last_name) FROM mydb.employees as e WHERE e.idemployees = :employee_id),
-                        job_category = (SELECT jp.job_category FROM mydb.job_positions as jp
-                                        LEFT JOIN mydb.service_records as sr ON jp.idjob_positions = sr.job_positions_idjob_positions
-                                        WHERE sr.employees_idemployees = :employee_id),
                         seniors_evaluation = :seniors_evaluation,
                         self_evaluation = :self_evaluation,
                         peer_evaluation = :peer_evaluation
@@ -104,23 +104,20 @@ class Evaluation {
             $sql = "DELETE FROM performance_evaluation WHERE evaluation_id = :id";
             $stmt = $this->db->getConnection()->prepare($sql);
             $stmt->bindValue(':id', $id);
-            $stmt->execute();
-
-            // Check if any rows were affected (record deleted)
-            if ($stmt->rowCount() > 0) {
-                return true; // Record deleted successfully
-            } else {
-                return false; // No records were deleted (student_id not found)
-            }
+            $success = $stmt->execute();
+    
+            return $success;
         } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
+            // Log the error or handle it appropriately
+            error_log("Error deleting record: " . $e->getMessage(), 0);
             throw $e; // Re-throw the exception for higher-level handling
         }
     }
 
     public function getAll() {
         try {
-            $sql = "SELECT pe.evaluation_id, pe.employee_id, CONCAT(e.first_name, ' ', e.last_name) as employee_name, jp.job_category, pe.seniors_evaluation, pe.self_evaluation,
+            $sql = "SELECT pe.evaluation_id, pe.employee_id, CONCAT(e.first_name, ' ', e.last_name) as employee_name, jp.job_category,
+             pe.seniors_evaluation, pe.self_evaluation,
             pe.peer_evaluation,
             CASE
                 WHEN pe.overall_performance >= 90 THEN 'Excellent'
@@ -152,15 +149,21 @@ class Evaluation {
             if ($stmtExisting->rowCount() > 0) {
                 // Update the existing record in performance_evaluation
                 $updateQuery = "UPDATE performance_evaluation 
-                                SET seniors_evaluation = (SELECT overall_performance FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'senior'),
-                                    self_evaluation = (SELECT overall_performance FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'self'),
-                                    peer_evaluation = (SELECT overall_performance FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'peer'),
+                                SET seniors_evaluation = (SELECT overall_performance FROM evaluations WHERE employee_id = 
+                                :employee_id AND evaluation_type = 'senior'),
+                                    self_evaluation = (SELECT overall_performance FROM evaluations WHERE employee_id = 
+                                    :employee_id AND evaluation_type = 'self'),
+                                    peer_evaluation = (SELECT overall_performance FROM evaluations WHERE employee_id = 
+                                    :employee_id AND evaluation_type = 'peer'),
                                     overall_performance = (SELECT AVG(score) FROM (
-                                        SELECT overall_performance as score FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'senior'
+                                        SELECT overall_performance as score FROM evaluations WHERE employee_id = 
+                                        :employee_id AND evaluation_type = 'senior'
                                         UNION ALL
-                                        SELECT overall_performance as score FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'self'
+                                        SELECT overall_performance as score FROM evaluations WHERE employee_id = 
+                                        :employee_id AND evaluation_type = 'self'
                                         UNION ALL
-                                        SELECT overall_performance as score FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'peer'
+                                        SELECT overall_performance as score FROM evaluations WHERE employee_id = 
+                                        :employee_id AND evaluation_type = 'peer'
                                     ) AS subquery)
                                 WHERE employee_id = :employee_id";
     
@@ -169,21 +172,28 @@ class Evaluation {
                 $stmtUpdate->execute();
             } else {
                 // Insert a new record in performance_evaluation
-                $insertQuery = "INSERT INTO performance_evaluation (employee_id, job_position_id, seniors_evaluation, self_evaluation, peer_evaluation, overall_performance)
+                $insertQuery = "INSERT INTO performance_evaluation (employee_id, job_position_id, seniors_evaluation, self_evaluation, 
+                peer_evaluation, overall_performance)
                                 VALUES (:employee_id,
                                         (SELECT jp.idjob_positions FROM job_positions as jp
                                         LEFT JOIN service_records as sr ON jp.idjob_positions = sr.job_positions_idjob_positions
                                         LEFT JOIN employees as e ON sr.employees_idemployees = e.idemployees
                                         WHERE e.idemployees = :employee_id),
-                                        (SELECT overall_performance FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'senior'),
-                                        (SELECT overall_performance FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'self'),
-                                        (SELECT overall_performance FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'peer'),
+                                        (SELECT overall_performance FROM evaluations WHERE employee_id = :employee_id AND 
+                                        evaluation_type = 'senior'),
+                                        (SELECT overall_performance FROM evaluations WHERE employee_id = :employee_id AND 
+                                        evaluation_type = 'self'),
+                                        (SELECT overall_performance FROM evaluations WHERE employee_id = :employee_id AND 
+                                        evaluation_type = 'peer'),
                                         (SELECT AVG(score) FROM (
-                                            SELECT overall_performance as score FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'senior'
+                                            SELECT overall_performance as score FROM evaluations WHERE employee_id = :employee_id AND 
+                                            evaluation_type = 'senior'
                                             UNION ALL
-                                            SELECT overall_performance as score FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'self'
+                                            SELECT overall_performance as score FROM evaluations WHERE employee_id = :employee_id AND 
+                                            evaluation_type = 'self'
                                             UNION ALL
-                                            SELECT overall_performance as score FROM evaluations WHERE employee_id = :employee_id AND evaluation_type = 'peer'
+                                            SELECT overall_performance as score FROM evaluations WHERE employee_id = :employee_id AND 
+                                            evaluation_type = 'peer'
                                         ) AS subquery))";
     
                 $stmtInsert = $this->db->getConnection()->prepare($insertQuery);

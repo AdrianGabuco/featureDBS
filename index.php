@@ -24,11 +24,15 @@ $evaluationSummary = "Welcome to our Employee Performance Evaluation System. Tra
     <?php include('header.html'); ?>
     <?php include('navbar.php'); ?>
 
-    <div class="content">
+    <div class="index1">
         <!--<h1>Employee Performance Evaluation System</h1>-->
-        <h2><?php echo $evaluationSummary; ?></h2>
+        <h1>Welcome to our <strong>Employee Performance Evaluation System</strong></h1>
     </div>
 
+    <div class="index2">
+        <p><em>Track and manage employee evaluations efficiently. Evaluate commitment, problem identification, task performance,
+             <br>interpersonal relationships, professional posture, initiative, system overview, punctuality, and attendance.</em></p>
+    </div>
     <!-- Include the footer -->
     <?php //include('footer.html'); ?>
 </body>

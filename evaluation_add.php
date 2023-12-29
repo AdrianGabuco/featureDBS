@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="content">
     <h1>Add New Evaluation</h1>
-    <form action="" method="post" class="centered-form">
+    <form action="" method="post" class="form-label">
         <label for="employee_id">Select Employee:</label>
         <select name="employee_id" required>
         <!-- Fetch employee names and IDs from the database and populate the dropdown -->

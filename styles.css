@@ -27,9 +27,25 @@
     font-size: 18px;
 }
 
+.index1 h1{
+    text-align: center;
+    color:#66b1fd;
+    margin-left:250px;
+    font-family: "C:\Users\my pc\Downloads\RobotoSlab-VariableFont_wght.ttf";
+    font-size:50px;
+}
+
+.index2 p{
+    text-align: center;
+    color:#66b1fd;
+    margin-left:250px;
+    font-family: "C:\Users\my pc\Downloads\RobotoSlab-VariableFont_wght.ttf";
+    font-size:  25px;
+}
 .content {
     margin-left: 200px; /* Adjust to match the sidebar width */
     padding: 50px;
+
 }
 
 /* Highlight the selected menu item */
@@ -48,7 +64,7 @@ body {
 
 /* Header */
 h1 {
-    color: #f8f9f9; /* Header color using the provided hex code */
+    color: #026eb7; /* Header color using the provided hex code */
 }
 
 /* Existing CSS remains the same */
@@ -106,21 +122,24 @@ th {
 
 /* Forms */
 form {
-    background-color: #D8F3DC; /* Form background color using the provided hex code */
-    border: 1px solid #95D5B2; /* Form border color using the provided hex code */
+    background-color: #026eb7; /* Form background color using the provided hex code */
+    border: 1px solid #3956f9; /* Form border color using the provided hex code */
     padding: 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 500px;
+    width: 80%;
 }
 
 .centered-form {
     display: flex;
-    flex-direction: column;
+    flex-direction:column;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* 100% of the viewport height */
+    height: 50vh; /* 100% of the viewport height */
 }
 
+.form-label {
+    text-align: left;
+  }
 .centered-form label {
     text-align: left; /* Keep labels left-aligned */
 }
@@ -128,10 +147,26 @@ form {
 label {
     display: block;
     margin-bottom: 10px;
-    color: #74C69D; /* Text color using the provided hex code */
+    color: #ffffff; /* Text color using the provided hex code */
 }
 
-input[type="text"],
+input[type="text"]{
+width: 98%;
+padding: 10px;
+margin-bottom: 10px;
+border: 1px solid #fafcfb; /* Form border color using the provided hex code */
+border-radius: 5px;
+
+}
+input[type="number"]{
+    width: 98%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #fafcfb; /* Form border color using the provided hex code */
+    border-radius: 5px;
+    
+    }
+
 input[type="date"],
 select {
     width: 100%;
@@ -142,7 +177,8 @@ select {
 }
 
 input[type="submit"] {
-    background-color: #74C69D; /* Submit button color using the provided hex code */
+
+    background-color: #103386; /* Submit button color using the provided hex code */
     color: #D8F3DC; /* Text color using the provided hex code */
     padding: 10px 20px;
     border: none;
@@ -151,7 +187,7 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-    background-color: #fafbfa; /* Slightly darker hover color using the provided hex code */
+    background-color: #3956f9; /* Slightly darker hover color using the provided hex code */
 }
 
 /* Header */
@@ -160,6 +196,7 @@ header {
     color: #fdfdfde2;
     padding: 20px 0;
     text-align: center;
+    position: sticky;
 }
 
 .header-content {
@@ -172,6 +209,7 @@ header {
 .header-content h1 {
     font-size: 36px;
     margin: 0;
+    color: #ffffff;
 }
 
 .header-content p {
@@ -182,7 +220,7 @@ header {
 .button-link {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #74C69D; /* Button background color */
+    background-color: #103386; /* Button background color */
     color: #fff; /* Button text color */
     text-decoration: none;
     border: none;
@@ -192,7 +230,7 @@ header {
 }
 
 .button-link:hover {
-    background-color: #3DAC78; /* Button background color on hover */
+    background-color: #3956f9; /* Button background color on hover */
 }
 
 /* Footer */
